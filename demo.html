@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0a0a0a">
+<title>Trattoria Girasole · Menu demo</title>
+<style>
+  :root{
+    --black:#0a0a0a; --ink-on-black:#f3ede0; --muted-on-black:#a89f8d; --gold:#c9a45c; --black-line:#3a342a;
+    --cream:#f5efe2; --card:#fffdf8; --card-line:#e9dfc9; --text:#2b241c; --muted:#6d6252; --faint:#7a6f5d; --accent:#a3411f;
+    --serif:Georgia,'Noto Serif','Times New Roman',serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{background:var(--black);scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  body{background:var(--black);color:var(--text);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;-webkit-text-size-adjust:100%}
+  .wrap{max-width:960px;margin:0 auto;padding:0 18px}
+
+  /* ---------- parte alta: nera, fino alla scelta delle categorie ---------- */
+  .hero{color:var(--ink-on-black);text-align:center;padding:12px 0 26px}
+  .lang{display:flex;align-items:center;justify-content:center;gap:8px}
+  .lang-label{color:var(--muted-on-black);font-size:13px;font-weight:600;margin-right:2px}
+  .lang button{width:42px;height:30px;padding:0;border-radius:6px;border:2px solid var(--black-line);background:#161616;cursor:pointer;display:flex;align-items:center;justify-content:center}
+  .lang button svg{width:26px;height:17px;display:block;border-radius:2px}
+  .lang button[aria-pressed="true"]{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold)}
+  .lang button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  .logo{display:block;width:auto;height:auto;max-height:92px;max-width:60%;margin:14px auto 0}
+  .kicker{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:22px;color:var(--gold);font-size:14px;letter-spacing:.38em;text-transform:uppercase}
+  .kicker span{width:34px;height:1px;background:var(--gold);opacity:.7}
+  h1{font:italic 400 clamp(52px,17vw,76px)/1.05 var(--serif);margin:8px 0 6px;color:var(--ink-on-black)}
+  .tag{color:var(--muted-on-black);font-size:15px;letter-spacing:.04em}
+
+  nav.chips{position:sticky;top:0;z-index:5;background:var(--black);border-bottom:1px solid var(--black-line)}
+  nav.chips .scroll{display:flex;gap:10px;overflow-x:auto;padding:12px 18px;max-width:960px;margin:0 auto;scrollbar-width:none}
+  nav.chips .scroll::-webkit-scrollbar{display:none}
+  .chip{flex:none;color:var(--ink-on-black);text-decoration:none;border:1px solid var(--black-line);border-radius:999px;padding:9px 18px;font-size:16px;font-weight:600;white-space:nowrap}
+  .chip:hover,.chip:focus-visible,.chip.on{border-color:var(--gold);color:var(--gold);outline:none}
+
+  /* ---------- parte bassa: bianco/panna ---------- */
+  .sheet{background:var(--cream);border-radius:26px 26px 0 0;padding:6px 0 0;min-height:60vh}
+  section.cat{padding-top:30px;scroll-margin-top:76px}
+  section.cat h2{font:400 28px/1.2 var(--serif);text-align:center;color:var(--text)}
+  .orn{display:flex;align-items:center;justify-content:center;gap:10px;color:var(--accent);margin:10px 0 20px}
+  .orn span{width:48px;height:1px;background:currentColor;opacity:.6}
+  .orn svg{width:11px;height:11px;display:block}
+
+  .dishes{display:grid;grid-template-columns:1fr;gap:12px}
+  @media (min-width:760px){.dishes{grid-template-columns:1fr 1fr;gap:14px}}
+  .dish{display:flex;gap:14px;background:var(--card);border:1px solid var(--card-line);border-radius:14px;padding:14px}
+  .thumb{flex:none;width:64px;height:64px;border-radius:50%;background:#f3e8d0;display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .thumb svg{width:64px;height:64px;display:block}
+  .dbody{flex:1;min-width:0}
+  .dtop{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+  .dtop h3{font:700 18px/1.25 var(--serif);color:var(--text)}
+  .price{font:700 18px/1.25 var(--serif);color:var(--accent);white-space:nowrap}
+  .ddesc{color:var(--muted);font-size:15px;line-height:1.4;margin-top:4px}
+  .lunch{margin-top:8px;font-size:14px;color:var(--text)}
+  .lunch b{color:var(--accent);font-family:var(--serif);font-size:16px}
+  .lunch small{color:var(--faint);font-size:13px}
+  .dal{color:var(--faint);font-size:13px;margin-top:6px}
+  .off{opacity:.55}
+  .tag-off{display:inline-block;margin-left:8px;font:600 12px/1 system-ui,sans-serif;color:var(--card);background:var(--muted);border-radius:6px;padding:3px 7px;vertical-align:middle}
+
+  footer.end{padding:44px 18px 48px;text-align:center}
+  footer.end .logo{margin:0 auto;max-height:80px}
+  footer.end p{color:var(--faint);font-size:13px;margin-top:10px}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <div class="lang" role="group" aria-label="Lingua / Language">
+      <span class="lang-label" id="langLabel">Lingua</span>
+      <button type="button" data-lang="it" aria-label="Italiano" aria-pressed="true"><svg viewBox="0 0 3 2" preserveAspectRatio="none" aria-hidden="true"><rect width="1" height="2" fill="#009246"/><rect x="1" width="1" height="2" fill="#ffffff"/><rect x="2" width="1" height="2" fill="#ce2b37"/></svg></button>
+      <button type="button" data-lang="en" aria-label="English" aria-pressed="false"><svg viewBox="0 0 60 30" preserveAspectRatio="none" aria-hidden="true"><clipPath id="uj-s"><path d="M0,0 v30 h60 v-30 z"/></clipPath><clipPath id="uj-t"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath><g clip-path="url(#uj-s)"><path d="M0,0 v30 h60 v-30 z" fill="#012169"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#ffffff" stroke-width="6"/><path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#uj-t)" stroke="#C8102E" stroke-width="4"/><path d="M30,0 v30 M0,15 h60" stroke="#ffffff" stroke-width="10"/><path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/></g></svg></button>
+    </div>
+    <img class="logo" alt="CcMenù" src="logo-tema-scuro.png">
+    <div class="kicker"><span></span><b id="kicker" style="font-weight:400">Trattoria</b><span></span></div>
+    <h1>Girasole</h1>
+    <p class="tag" id="tagline">Cucina di casa dal 1987</p>
+  </div>
+</header>
+
+<nav class="chips"><div class="scroll" id="chipList"></div></nav>
+
+<main class="sheet">
+  <div class="wrap" id="app"></div>
+  <footer class="end">
+    <img class="logo" alt="CcMenù" src="logo-tema-chiaro.png">
+    <p id="demoNote">Menu dimostrativo</p>
+  </footer>
+</main>
+
+<script>
+/* ===== Dati di esempio: ristorante inventato, nessun database ===== */
+const RESTAURANT = {
+  kicker: { it: 'Trattoria', en: 'Trattoria' },
+  tagline: { it: 'Cucina di casa dal 1987', en: 'Home cooking since 1987' }
+};
+const CATS = [
+  { id: 'antipasti', name: { it: 'Antipasti', en: 'Starters' }, items: [
+    { ico: 'bread', price: 7, name: { it: 'Bruschette miste', en: 'Mixed Bruschetta' },
+      desc: { it: 'Pane casereccio, pomodorini, basilico e olio extravergine.', en: 'Rustic bread, cherry tomatoes, basil and extra virgin olive oil.' },
+      al: { it: 'glutine', en: 'gluten' } },
+    { ico: 'board', price: 14, name: { it: 'Tagliere di salumi e formaggi', en: 'Cured Meats & Cheese Board' },
+      desc: { it: 'Selezione di salumi e formaggi locali, miele e confettura.', en: 'Selection of local cured meats and cheeses, honey and jam.' },
+      al: { it: 'latte', en: 'milk' } },
+    { ico: 'caprese', price: 9, name: { it: 'Caprese di bufala', en: 'Buffalo Caprese' },
+      desc: { it: 'Mozzarella di bufala, pomodoro e basilico fresco.', en: 'Buffalo mozzarella, tomato and fresh basil.' },
+      al: { it: 'latte', en: 'milk' } }
+  ]},
+  { id: 'primi', name: { it: 'Primi piatti', en: 'First Courses' }, items: [
+    { ico: 'pasta', sauce: '#e8b030', price: 11, lunch: 14, name: { it: 'Spaghetti alla carbonara', en: 'Spaghetti Carbonara' },
+      desc: { it: 'Uovo, pecorino, guanciale croccante e pepe nero.', en: 'Egg, pecorino cheese, crispy guanciale and black pepper.' },
+      al: { it: 'glutine, uova, latte', en: 'gluten, eggs, milk' } },
+    { ico: 'pasta', sauce: '#9a3a22', price: 10.5, lunch: 13.5, name: { it: 'Tagliatelle al ragù', en: 'Tagliatelle with Meat Ragù' },
+      desc: { it: 'Pasta fresca all\u2019uovo, ragù di manzo e maiale cotto lentamente.', en: 'Fresh egg pasta with slow-cooked beef and pork ragù.' },
+      al: { it: 'glutine, uova, sedano', en: 'gluten, eggs, celery' } },
+    { ico: 'risotto', price: 12, name: { it: 'Risotto ai funghi porcini', en: 'Porcini Mushroom Risotto' },
+      desc: { it: 'Riso Carnaroli, funghi porcini e parmigiano.', en: 'Carnaroli rice, porcini mushrooms and parmesan.' },
+      al: { it: 'latte', en: 'milk' } }
+  ]},
+  { id: 'secondi', name: { it: 'Secondi piatti', en: 'Main Courses' }, items: [
+    { ico: 'steak', price: 18, name: { it: 'Tagliata di manzo', en: 'Sliced Beef Steak' },
+      desc: { it: 'Manzo alla griglia, rucola, scaglie di parmigiano e glassa balsamica.', en: 'Grilled beef, rocket, parmesan flakes and balsamic glaze.' },
+      al: { it: 'latte', en: 'milk' } },
+    { ico: 'cutlet', price: 15, name: { it: 'Cotoletta alla milanese', en: 'Milanese Cutlet' },
+      desc: { it: 'Cotoletta di vitello impanata, limone e patate al forno.', en: 'Breaded veal cutlet with lemon and roasted potatoes.' },
+      al: { it: 'glutine, uova', en: 'gluten, eggs' } },
+    { ico: 'fish', price: 16, off: true, name: { it: 'Orata al forno', en: 'Baked Sea Bream' },
+      desc: { it: 'Orata al forno con pomodorini, olive e patate.', en: 'Sea bream baked with cherry tomatoes, olives and potatoes.' },
+      al: { it: 'pesce', en: 'fish' } }
+  ]},
+  { id: 'dolci', name: { it: 'Dolci', en: 'Desserts' }, items: [
+    { ico: 'tiramisu', price: 6, name: { it: 'Tiramisù', en: 'Tiramisu' },
+      desc: { it: 'Crema al mascarpone, caffè, savoiardi e cacao.', en: 'Mascarpone cream, coffee, ladyfingers and cocoa.' },
+      al: { it: 'glutine, uova, latte', en: 'gluten, eggs, milk' } },
+    { ico: 'panna', price: 5.5, name: { it: 'Panna cotta ai frutti di bosco', en: 'Panna Cotta with Berries' },
+      desc: { it: 'Panna cotta fatta in casa con salsa ai frutti di bosco.', en: 'Homemade panna cotta with wild berry sauce.' },
+      al: { it: 'latte', en: 'milk' } },
+    { ico: 'cannolo', price: 5, name: { it: 'Cannolo siciliano', en: 'Sicilian Cannolo' },
+      desc: { it: 'Cialda croccante con ricotta dolce.', en: 'Crispy shell filled with sweet ricotta.' },
+      al: { it: 'glutine, latte', en: 'gluten, milk' } }
+  ]},
+  { id: 'bevande', name: { it: 'Bevande', en: 'Drinks' }, items: [
+    { ico: 'water', price: 2, name: { it: 'Acqua', en: 'Water' }, desc: { it: 'Naturale o frizzante, 75 cl', en: 'Still or sparkling, 75 cl' } },
+    { ico: 'wine', price: 4.5, name: { it: 'Vino della casa', en: 'House Wine' }, desc: { it: 'Calice, rosso o bianco', en: 'Glass, red or white' }, al: { it: 'solfiti', en: 'sulphites' } },
+    { ico: 'beer', price: 5.5, name: { it: 'Birra artigianale', en: 'Craft Beer' }, desc: { it: 'Bottiglia 33 cl', en: 'Bottle 33 cl' }, al: { it: 'glutine', en: 'gluten' } },
+    { ico: 'coffee', price: 1.5, name: { it: 'Caffè', en: 'Espresso' }, desc: { it: 'Espresso', en: 'Espresso coffee' } }
+  ]}
+];
+
+/* ===== Testi dell'interfaccia ===== */
+const UI = {
+  it: { lang: 'Lingua', soldout: 'Esaurito', allergens: 'Allergeni', lunch: 'Menu pranzo', lunchNote: 'con acqua e caffè', demo: 'Menu dimostrativo' },
+  en: { lang: 'Language', soldout: 'Sold out', allergens: 'Allergens', lunch: 'Lunch menu', lunchNote: 'with water and coffee', demo: 'Demo menu' }
+};
+let lang = 'it';
+const u = k => UI[lang][k];
+const L = o => o[lang] || o.it;
+const h = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const eur = n => {
+  const v = Number(n).toLocaleString(lang === 'en' ? 'en-GB' : 'it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  return lang === 'en' ? '\u20AC' + v : v + ' \u20AC';
+};
+
+/* ===== Illustrazioni dei piatti (disegnate qui, nessuna foto) ===== */
+const BOWL = '<path d="M10 32h44c0 14-9 22-22 22S10 46 10 32z" fill="#fff" stroke="#d9cfb8" stroke-width="2"/>';
+const PLATE = '<circle cx="32" cy="34" r="22" fill="#fff" stroke="#d9cfb8" stroke-width="2"/>';
+const ART = {
+  bread: () => '<rect x="10" y="22" width="26" height="22" rx="6" fill="#d9a65e" transform="rotate(-8 23 33)"/><rect x="28" y="24" width="26" height="22" rx="6" fill="#e3b46c" transform="rotate(7 41 35)"/><circle cx="22" cy="30" r="4" fill="#d33a2c"/><circle cx="30" cy="36" r="3.5" fill="#d33a2c"/><circle cx="40" cy="32" r="4" fill="#d33a2c"/><circle cx="47" cy="39" r="3.5" fill="#d33a2c"/><path d="M33 27c3-5 8-5 9-3-2 4-6 5-9 3z" fill="#4a8f3a"/>',
+  board: () => '<rect x="8" y="20" width="48" height="28" rx="8" fill="#a8743f"/><path d="M14 42L30 28v14z" fill="#f0c94a"/><circle cx="25" cy="38" r="1.3" fill="#c9a22a"/><circle cx="38" cy="30" r="6" fill="#c8506a"/><circle cx="38" cy="30" r="2" fill="#e58aa0"/><circle cx="47" cy="38" r="6" fill="#c8506a"/><circle cx="47" cy="38" r="2" fill="#e58aa0"/>',
+  caprese: () => '<circle cx="22" cy="40" r="9" fill="#fffaf0" stroke="#e3d9c4"/><circle cx="34" cy="34" r="9" fill="#e0453a"/><circle cx="44" cy="42" r="9" fill="#fffaf0" stroke="#e3d9c4"/><path d="M28 22c6-6 14-4 15 0-5 5-12 5-15 0z" fill="#3f8f3a"/>',
+  pasta: d => BOWL + '<ellipse cx="32" cy="31" rx="20" ry="7" fill="#f2cf63"/><path d="M18 31c4-6 10-6 14 0s10 6 14 0" fill="none" stroke="#d9a93a" stroke-width="2"/><path d="M22 28c3-4 7-4 10 0s7 4 10 0" fill="none" stroke="#d9a93a" stroke-width="2"/><circle cx="31" cy="27" r="5" fill="' + (d.sauce || '#c1432e') + '"/>',
+  risotto: () => BOWL + '<ellipse cx="32" cy="31" rx="20" ry="7" fill="#f5e6c4"/><ellipse cx="26" cy="29" rx="6" ry="4" fill="#8a5a2b"/><ellipse cx="38" cy="32" rx="5" ry="3.5" fill="#a06a35"/><circle cx="32" cy="33" r="1.2" fill="#fff"/>',
+  steak: () => PLATE + '<rect x="16" y="26" width="30" height="8" rx="4" fill="#7a3a28" transform="rotate(-12 31 30)"/><rect x="18" y="35" width="30" height="8" rx="4" fill="#8f4a33" transform="rotate(-8 33 39)"/><path d="M44 22c4 0 8 3 8 7-4 0-8-3-8-7z" fill="#4a8f3a"/><path d="M14 40c-1-4 3-8 7-8 0 4-3 8-7 8z" fill="#5da04a"/>',
+  cutlet: () => PLATE + '<path d="M16 36c0-9 8-14 18-12 9 2 13 9 10 15-3 6-12 8-19 5-5-2-9-4-9-8z" fill="#d79a3b"/><path d="M22 34c4-5 11-6 16-3" fill="none" stroke="#efc474" stroke-width="2"/><path d="M44 46a9 9 0 0 1 9-9 9 9 0 0 1-9 9z" fill="#f6dd3b"/>',
+  fish: () => '<path d="M10 32c8-12 24-14 34-4l10-8v24l-10-8c-10 10-26 8-34-4z" fill="#7fa3b8"/><circle cx="20" cy="29" r="2" fill="#1d2a2c"/><path d="M26 24c3 4 3 12 0 16" fill="none" stroke="#5f869c" stroke-width="2"/>',
+  tiramisu: () => '<rect x="12" y="20" width="40" height="26" rx="4" fill="#fff8e6" stroke="#d9cfb8"/><rect x="12" y="20" width="40" height="7" rx="3" fill="#5a3a22"/><rect x="12" y="31" width="40" height="5" fill="#b98550"/><rect x="12" y="38" width="40" height="3" fill="#b98550"/>',
+  panna: () => '<ellipse cx="32" cy="46" rx="20" ry="5" fill="#e8dfcc"/><path d="M14 46c0-16 8-24 18-24s18 8 18 24z" fill="#fffaf0" stroke="#e3d9c4"/><circle cx="26" cy="22" r="3.5" fill="#b8264a"/><circle cx="34" cy="20" r="3.5" fill="#6a2a6a"/><circle cx="39" cy="25" r="3" fill="#b8264a"/><path d="M22 44c0-10 4-16 10-20" fill="none" stroke="#c63a5e" stroke-width="3" opacity=".5"/>',
+  cannolo: () => '<g transform="rotate(-18 32 33)"><rect x="10" y="26" width="44" height="14" rx="7" fill="#d9a05b"/><ellipse cx="12" cy="33" rx="3" ry="6.5" fill="#fffaf0"/><ellipse cx="52" cy="33" rx="3" ry="6.5" fill="#fffaf0"/><circle cx="26" cy="31" r="1.2" fill="#fff"/><circle cx="34" cy="35" r="1.2" fill="#fff"/><circle cx="42" cy="31" r="1.2" fill="#fff"/></g>',
+  water: () => '<rect x="24" y="14" width="16" height="38" rx="6" fill="#bfe3f2" stroke="#8cc3dd" stroke-width="2"/><rect x="28" y="8" width="8" height="8" rx="2" fill="#8cc3dd"/><rect x="24" y="30" width="16" height="12" fill="#8cc3dd" opacity=".5"/>',
+  wine: () => '<path d="M22 12h20c0 14-4 22-10 22S22 26 22 12z" fill="#fff" stroke="#c9bfa8" stroke-width="2"/><path d="M24 20h16c-1 8-4 12-8 12s-7-4-8-12z" fill="#8b1e3f"/><rect x="31" y="34" width="2" height="16" fill="#c9bfa8"/><rect x="24" y="50" width="16" height="3" rx="1.5" fill="#c9bfa8"/>',
+  beer: () => '<rect x="16" y="18" width="26" height="32" rx="4" fill="#f0b429" stroke="#c88a12" stroke-width="2"/><path d="M16 18c0-6 6-8 9-5 3-4 10-3 11 2 3 0 6 3 6 5z" fill="#fff8e6"/><path d="M42 24h6c4 0 4 16 0 16h-6" fill="none" stroke="#c88a12" stroke-width="4"/>',
+  coffee: () => '<path d="M14 26h30v10c0 8-6 14-15 14s-15-6-15-14z" fill="#fff" stroke="#d9cfb8" stroke-width="2"/><path d="M44 28h4c5 0 5 10 0 10h-4" fill="none" stroke="#d9cfb8" stroke-width="3"/><ellipse cx="29" cy="26" rx="15" ry="3" fill="#5a3a22"/><path d="M22 18c0-3 3-3 3-6M30 18c0-3 3-3 3-6" fill="none" stroke="#bbb" stroke-width="2" stroke-linecap="round"/>'
+};
+const art = d => '<svg viewBox="0 0 64 64" aria-hidden="true">' + ART[d.ico](d) + '</svg>';
+
+/* ===== Disegno della pagina ===== */
+const ORN = '<div class="orn"><span></span><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M6 0l1.6 4.4L12 6 7.6 7.6 6 12 4.4 7.6 0 6l4.4-1.6z" fill="currentColor"/></svg><span></span></div>';
+
+function dish(d){
+  const al = d.al ? L(d.al) : '';
+  return `<article class="dish${d.off ? ' off' : ''}">
+    <div class="thumb">${art(d)}</div>
+    <div class="dbody">
+      <div class="dtop"><h3>${h(L(d.name))}${d.off ? `<span class="tag-off">${h(u('soldout'))}</span>` : ''}</h3><span class="price">${eur(d.price)}</span></div>
+      <p class="ddesc">${h(L(d.desc))}</p>
+      ${d.lunch ? `<p class="lunch">${h(u('lunch'))} <b>${eur(d.lunch)}</b> <small>· ${h(u('lunchNote'))}</small></p>` : ''}
+      ${al ? `<p class="dal">${h(u('allergens'))}: ${h(al)}</p>` : ''}
+    </div></article>`;
+}
+
+function render(){
+  document.documentElement.lang = lang;
+  document.getElementById('langLabel').textContent = u('lang');
+  document.querySelectorAll('.lang button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
+  document.getElementById('kicker').textContent = L(RESTAURANT.kicker);
+  document.getElementById('tagline').textContent = L(RESTAURANT.tagline);
+  document.getElementById('demoNote').textContent = u('demo');
+  document.getElementById('app').innerHTML = CATS.map(c => `<section class="cat" id="cat-${c.id}" data-id="${c.id}">
+      <h2>${h(L(c.name))}</h2>${ORN}
+      <div class="dishes">${c.items.map(dish).join('')}</div></section>`).join('');
+  document.getElementById('chipList').innerHTML =
+    CATS.map(c => `<a class="chip" href="#cat-${c.id}" data-id="${c.id}">${h(L(c.name))}</a>`).join('');
+  watchSections();
+}
+
+/* categoria evidenziata mentre si scorre */
+let io = null;
+function watchSections(){
+  if(io) io.disconnect();
+  if(!('IntersectionObserver' in window)) return;
+  io = new IntersectionObserver(entries => {
+    entries.forEach(en => {
+      if(!en.isIntersecting) return;
+      document.querySelectorAll('.chip').forEach(c => c.classList.toggle('on', c.dataset.id === en.target.dataset.id));
+      const on = document.querySelector('.chip.on');
+      if(on) on.scrollIntoView({ block: 'nearest', inline: 'center' });
+    });
+  }, { rootMargin: '-35% 0px -60% 0px' });
+  document.querySelectorAll('section.cat').forEach(s => io.observe(s));
+}
+
+function initialLang(){
+  try{ const s = localStorage.getItem('lang'); if(s === 'it' || s === 'en') return s; }catch{}
+  return (navigator.language || 'it').toLowerCase().startsWith('it') ? 'it' : 'en';
+}
+document.querySelector('.lang').addEventListener('click', e => {
+  const b = e.target.closest('button[data-lang]');
+  if(!b) return;
+  lang = b.dataset.lang;
+  try{ localStorage.setItem('lang', lang); }catch{}
+  render();
+});
+lang = initialLang();
+render();
+</script>
+</body>
+</html>
