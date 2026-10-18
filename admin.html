@@ -1,14 +1,13 @@
 <!doctype html>
-<html lang="it" data-theme="dark">
+<html lang="it">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#000000">
 <meta name="robots" content="noindex">
-<title>Gestione menu</title>
+<title>Gestione menu · Classico</title>
 <style>
-  :root{color-scheme:dark;--bg:#000;--panel:#141414;--card:#2b2b2b;--item-border:#3d3d3d;--line:#2a2a2a;--text:#f4f4f4;--muted:#b0b0b0;--accent:#f2a71b;--ink:#1a1a1a;--bad:#ff7a6e;--bad-fg:#2a0805;--input-bg:#0b0b0b;--btn-bg:#1c1c1c;--btn-border:#3a3a3a;--btn-hover:#5a5a5a;--danger-border:#5a2a26;--toast-bg:#ffffff;--toast-fg:#111111}
-  :root[data-theme="light"]{color-scheme:light;--bg:#faf8f3;--panel:#ffffff;--card:#efe9dc;--item-border:#d9d0bc;--line:#e3ddd0;--text:#1d2a2c;--muted:#56646a;--accent:#b4570f;--ink:#ffffff;--bad:#b3261e;--bad-fg:#ffffff;--input-bg:#ffffff;--btn-bg:#f1ede3;--btn-border:#cfc7b6;--btn-hover:#a79d88;--danger-border:#e0b4ae;--toast-bg:#1d2a2c;--toast-fg:#ffffff}
+  :root{color-scheme:light;--bg:#f5efe2;--panel:#fffdf8;--card:#f1e8d4;--item-border:#e0d3b8;--line:#e9dfc9;--text:#2b241c;--muted:#6d6252;--accent:#a3411f;--ink:#ffffff;--bad:#b3261e;--bad-fg:#ffffff;--input-bg:#ffffff;--btn-bg:#f3ecdb;--btn-border:#d9ccb0;--btn-hover:#a89870;--danger-border:#e3b3ad;--toast-bg:#2b241c;--toast-fg:#ffffff}
   *{box-sizing:border-box;margin:0;padding:0}
   html{background:var(--bg)}
   body{background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;min-height:100vh;-webkit-text-size-adjust:100%}
@@ -85,10 +84,19 @@
   .logo{display:block;width:auto;height:auto;max-height:96px;max-width:60%}
   .logo-top{margin:0 auto 18px}
   .logo-bottom{margin:36px auto 0;max-height:80px}
+  html,body{background:#0a0a0a}
+  .band{background:#0a0a0a;color:#f3ede0;text-align:center;padding:16px 18px 24px}
+  .band .logo{display:block;margin:0 auto;width:auto;height:auto;max-height:84px;max-width:60%}
+  .band h1{font:italic 400 32px/1.1 Georgia,'Noto Serif','Times New Roman',serif;text-transform:none;letter-spacing:0;margin-top:10px}
+  .page{background:var(--bg);border-radius:26px 26px 0 0;min-height:78vh}
 </style>
 </head>
 <body>
-<div class="wrap" id="app"><p class="muted center">Caricamento…</p></div>
+<header class="band">
+  <img class="logo" alt="CcMenù" src="logo-tema-scuro.png">
+  <h1>Gestione menu</h1>
+</header>
+<div class="page"><div class="wrap" id="app"><p class="muted center">Caricamento…</p></div></div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
@@ -100,17 +108,7 @@ const app = document.getElementById('app');
 const $ = id => document.getElementById(id);
 const state = { user: null, restaurants: [], rest: null, cats: [], open: new Set(), openItems: new Set() };
 
-const LOGOS = { dark: 'logo-tema-scuro.png', light: 'logo-tema-chiaro.png' };
-let theme = 'dark';
-function applyTheme(t){
-  theme = t === 'light' ? 'light' : 'dark';
-  document.documentElement.dataset.theme = theme;
-  document.querySelectorAll('img.logo').forEach(i => { i.src = LOGOS[theme]; });
-  const m = document.querySelector('meta[name="theme-color"]');
-  if(m) m.content = theme === 'light' ? '#faf8f3' : '#000000';
-  try{ localStorage.setItem('menuTheme', theme); }catch{}
-}
-const logoImg = cls => `<img class="logo ${cls}" alt="CcMenù" src="${LOGOS[theme]}">`;
+const logoImg = cls => `<img class="logo ${cls}" alt="CcMenù" src="logo-tema-chiaro.png">`;
 
 const h = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmtInput = n => Number(n).toFixed(2).replace('.', ',');
@@ -128,9 +126,7 @@ function toast(msg, bad){
 /* ---------- Accesso ---------- */
 function renderLogin(){
   app.innerHTML = `<div class="login">
-    ${logoImg('logo-top')}
-    <div class="brand"><span class="bar"></span>
-      <div><h1>Gestione menu</h1><p class="muted">Accedi per modificare il tuo menu.</p></div></div>
+    <p class="muted" style="text-align:center">Accedi per modificare il tuo menu.</p>
     <form class="panel" id="loginForm">
       <label class="field">Email<input type="email" id="email" autocomplete="username" required></label>
       <label class="field">Password<input type="password" id="password" autocomplete="current-password" required></label>
@@ -156,7 +152,7 @@ function renderLogin(){
 }
 
 function fatal(title, text){
-  app.innerHTML = `${logoImg('logo-top')}<div class="center"><h2>${h(title)}</h2><p class="muted">${h(text)}</p>
+  app.innerHTML = `<div class="center"><h2>${h(title)}</h2><p class="muted">${h(text)}</p>
     <div class="actions" style="justify-content:center"><button class="btn" data-act="logout">Esci</button></div></div>${logoImg('logo-bottom')}`;
 }
 
@@ -178,20 +174,18 @@ async function selectRestaurant(id){
   state.cats = data.sort(bySort).map(c => ({...c, items: (c.items || []).sort(bySort)}));
   state.open = new Set();
   state.openItems = new Set();
-  applyTheme(state.rest.theme);
   renderEditor();
 }
 
 /* ---------- Interfaccia di modifica ---------- */
 function itemHtml(it, c, i, n){
-  const photo = c.layout === 'cards' ? `<div class="photo-row">
+  const photo = `<div class="photo-row">
       ${it.image_url ? `<img class="thumb" src="${h(it.image_url)}" alt="">` : '<div class="thumb">Nessuna foto</div>'}
       <div class="photo-actions">
         <label class="btn sm">${it.image_url ? 'Cambia foto' : 'Carica foto'}<input type="file" accept="image/*" data-photo hidden></label>
         ${it.image_url ? '<button class="btn sm danger" data-act="photo-del">Rimuovi foto</button>' : ''}
-      </div></div>` : '';
-  const sthumb = c.layout === 'cards'
-    ? (it.image_url ? `<img class="sthumb" src="${h(it.image_url)}" alt="">` : '<span class="sthumb"></span>') : '';
+      </div></div>`;
+  const sthumb = it.image_url ? `<img class="sthumb" src="${h(it.image_url)}" alt="">` : '<span class="sthumb"></span>';
   return `<details class="item-card${it.available ? '' : ' off'}" data-item="${it.id}"${state.openItems.has(it.id) ? ' open' : ''}>
     <summary>${sthumb}<span class="item-name">${h(it.name)}</span><span class="tag-off">Esaurito</span><span class="chev" aria-hidden="true"></span></summary>
     <div class="item-body">
@@ -225,14 +219,7 @@ function catHtml(c, ci){
   return `<details class="panel" data-cat="${c.id}"${state.open.has(c.id) ? ' open' : ''}>
     <summary><span class="cat-title">${h(c.name)}</span><span class="cat-count">${n}</span><span class="chev" aria-hidden="true"></span></summary>
     <div class="cat-body">
-    <div class="cat-head">
-      <label class="field">Nome della categoria<input data-cfield="name" value="${h(c.name)}" maxlength="60"></label>
-      <label class="field">Aspetto
-        <select data-cfield="layout">
-          <option value="cards"${c.layout === 'cards' ? ' selected' : ''}>Schede con foto</option>
-          <option value="list"${c.layout === 'list' ? ' selected' : ''}>Elenco semplice</option>
-        </select></label>
-    </div>
+    <label class="field">Nome della categoria<input data-cfield="name" value="${h(c.name)}" maxlength="60"></label>
     <label class="field">Nome della categoria in inglese<input data-cfield="name_en" value="${h(c.name_en)}" maxlength="60"></label>
     <div class="actions">
       <button class="btn sm" data-act="cat-up" aria-label="Sposta la categoria su" ${ci === 0 ? 'disabled' : ''}>▲</button>
@@ -249,23 +236,17 @@ function renderEditor(){
   const r = state.rest;
   const link = new URL('index.html?r=' + encodeURIComponent(r.slug), location.href).href;
   app.innerHTML = `
-    ${logoImg('logo-top')}
     <div class="topbar">
-      <div class="brand"><span class="bar"></span><div><h1>Gestione menu</h1><p class="muted">${h(state.user.email)}</p></div></div>
+      <p class="muted">${h(state.user.email)}</p>
       <button class="btn" data-act="logout">Esci</button>
     </div>
     ${state.restaurants.length > 1 ? `<label class="field">Locale
       <select id="restSel">${state.restaurants.map(x => `<option value="${x.id}"${x.id === r.id ? ' selected' : ''}>${h(x.name)}</option>`).join('')}</select></label>` : ''}
     <section class="panel">
       <h2>Dati del locale</h2>
-      <label class="field">Nome<input data-rest="name" value="${h(r.name)}" maxlength="80"></label>
+      <label class="field">Nome (la prima parola appare in grande, le altre sotto)<input data-rest="name" value="${h(r.name)}" maxlength="80"></label>
       <label class="field">Sottotitolo<input data-rest="tagline" value="${h(r.tagline)}" maxlength="120"></label>
       <label class="field">Sottotitolo in inglese<input data-rest="tagline_en" value="${h(r.tagline_en)}" maxlength="120"></label>
-      <label class="field">Tema del menu (colori e logo)
-        <select data-rest="theme">
-          <option value="dark"${(r.theme || 'dark') === 'dark' ? ' selected' : ''}>Scuro</option>
-          <option value="light"${r.theme === 'light' ? ' selected' : ''}>Chiaro</option>
-        </select></label>
       <label class="field">Link del menu (da scrivere sulla tessera NFC)<input id="menuLink" readonly value="${h(link)}"></label>
       <div class="actions">
         <button class="btn" data-act="copy-link">Copia link</button>
@@ -332,12 +313,7 @@ async function reorder(list, i, dir, table){
 async function saveRest(t){
   const f = t.dataset.rest, v = t.value.trim();
   if(f === 'name' && !v){ toast('Il nome del locale non può essere vuoto', true); t.value = state.rest.name; return; }
-  if(await save('restaurants', state.rest.id, { [f]: v })){
-    state.rest[f] = v;
-    if(f === 'theme') applyTheme(v);
-  } else if(f === 'theme'){
-    t.value = state.rest.theme || 'dark';
-  }
+  if(await save('restaurants', state.rest.id, { [f]: v })) state.rest[f] = v;
 }
 
 async function saveCat(t){
@@ -408,7 +384,7 @@ async function act(name, btn){
 
   if(name === 'cat-add'){
     const { data, error } = await db.from('categories').insert({
-      restaurant_id: state.rest.id, name: 'Nuova categoria', layout: 'list',
+      restaurant_id: state.rest.id, name: 'Nuova categoria', layout: 'cards',
       sort_order: state.cats.length ? Math.max(...state.cats.map(c => c.sort_order)) + 1 : 1
     }).select().single();
     if(error) return toast('Non aggiunta: ' + error.message, true);
@@ -507,7 +483,6 @@ app.addEventListener('change', e => {
   const { data: { session } } = await db.auth.getSession();
   state.user = session ? session.user : null;
   db.auth.onAuthStateChange(ev => { if(ev === 'SIGNED_OUT'){ state.user = null; renderLogin(); } });
-  try{ applyTheme(localStorage.getItem('menuTheme')); }catch{ applyTheme('dark'); }
   if(state.user) start(); else renderLogin();
 })();
 </script>

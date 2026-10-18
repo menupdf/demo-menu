@@ -1,107 +1,98 @@
 <!doctype html>
-<html lang="it" data-theme="dark">
+<html lang="it">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#000000">
+<meta name="theme-color" content="#0a0a0a">
 <title>Menu</title>
 <style>
-  :root{color-scheme:dark;--bg:#000;--card:#1c1c1c;--card-border:transparent;--line:#2a2a2a;--text:#f4f4f4;--muted:#b0b0b0;--faint:#9a9a9a;--accent:#f2a71b;--on-accent:#1a1a1a;--chip-border:#3a3a3a;--img-bg:#111;--tag-bg:#bdbdbd;--tag-fg:#1a1a1a}
-  :root[data-theme="light"]{color-scheme:light;--bg:#faf8f3;--card:#ffffff;--card-border:#e6dfd1;--line:#e3ddd0;--text:#1d2a2c;--muted:#56646a;--faint:#66737a;--accent:#b4570f;--on-accent:#ffffff;--chip-border:#cfc7b6;--img-bg:#ece7db;--tag-bg:#e2dccf;--tag-fg:#3b4549}
+  :root{
+    --black:#0a0a0a; --ink-on-black:#f3ede0; --muted-on-black:#a89f8d; --gold:#c9a45c; --black-line:#3a342a;
+    --cream:#f5efe2; --card:#fffdf8; --card-line:#e9dfc9; --text:#2b241c; --muted:#6d6252; --faint:#7a6f5d; --accent:#a3411f;
+    --serif:Georgia,'Noto Serif','Times New Roman',serif;
+  }
   *{box-sizing:border-box;margin:0;padding:0}
-  html{background:var(--bg);scroll-behavior:smooth}
+  html{background:var(--black);scroll-behavior:smooth}
   @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
-  body{background:var(--bg);color:var(--text);font:17px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;min-height:100vh;-webkit-text-size-adjust:100%}
+  body{background:var(--black);color:var(--text);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;-webkit-text-size-adjust:100%}
   .wrap{max-width:960px;margin:0 auto;padding:0 18px}
 
-  header.top{padding:30px 0 4px}
-  .brand{text-align:center}
-  h1{font-family:'Patrick Hand','Segoe Print','Bradley Hand',cursive;font-size:48px;line-height:1.15;font-weight:400;white-space:nowrap}
-  h1 .t1,h1 .t2{display:block}
-  h1 .t1{font-size:2em}
-  .brand h1::after{content:"";display:block;width:min(100%,480px);height:4px;border-radius:2px;background:var(--accent);margin:12px auto 0}
-  .tagline{color:var(--muted);margin-top:12px;font-size:15px}
+  /* ---------- parte alta: nera, fino alla scelta delle categorie ---------- */
+  .hero{color:var(--ink-on-black);text-align:center;padding:12px 0 26px}
+  .lang{display:flex;align-items:center;justify-content:center;gap:8px}
+  .lang-label{color:var(--muted-on-black);font-size:13px;font-weight:600;margin-right:2px}
+  .lang button{width:42px;height:30px;padding:0;border-radius:6px;border:2px solid var(--black-line);background:#161616;cursor:pointer;display:flex;align-items:center;justify-content:center}
+  .lang button svg{width:26px;height:17px;display:block;border-radius:2px}
+  .lang button[aria-pressed="true"]{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold)}
+  .lang button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  .logo{display:block;width:auto;height:auto;max-height:92px;max-width:60%;margin:14px auto 0}
+  .titleblock{margin-top:18px}
+  h1{font:italic 400 76px/1.05 var(--serif);white-space:nowrap;color:var(--ink-on-black)}
+  .kicker{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:8px;color:var(--gold);font-size:13px;letter-spacing:.26em;text-transform:uppercase}
+  .kicker span{width:24px;height:1px;background:var(--gold);opacity:.7;flex:none}
+  .kicker b{font-weight:400;text-align:center;min-width:0}
+  .tag{color:var(--muted-on-black);font-size:15px;letter-spacing:.04em;margin-top:10px}
 
-  nav.chips{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);margin-top:20px}
+  nav.chips{position:sticky;top:0;z-index:5;background:var(--black);border-bottom:1px solid var(--black-line)}
   nav.chips .scroll{display:flex;gap:10px;overflow-x:auto;padding:12px 18px;max-width:960px;margin:0 auto;scrollbar-width:none}
   nav.chips .scroll::-webkit-scrollbar{display:none}
-  .chip{flex:none;color:var(--text);text-decoration:none;border:1px solid var(--chip-border);border-radius:999px;padding:9px 16px;font-size:16px;font-weight:600;white-space:nowrap}
-  .chip:hover,.chip:focus-visible{border-color:var(--accent);color:var(--accent);outline:none}
+  .chip{flex:none;color:var(--ink-on-black);text-decoration:none;border:1px solid var(--black-line);border-radius:999px;padding:9px 18px;font-size:16px;font-weight:600;white-space:nowrap}
+  .chip:hover,.chip:focus-visible,.chip.on{border-color:var(--gold);color:var(--gold);outline:none}
 
-  section.cat{padding-top:32px;scroll-margin-top:64px}
-  section.cat h2{font-size:22px;color:var(--accent);text-transform:uppercase;letter-spacing:2px;font-weight:800;margin-bottom:18px;text-align:center}
+  /* ---------- parte bassa: bianco/panna ---------- */
+  .sheet{background:var(--cream);border-radius:26px 26px 0 0;padding:6px 0 0;min-height:60vh}
+  section.cat{padding-top:30px;scroll-margin-top:76px}
+  section.cat h2{font:400 28px/1.2 var(--serif);text-align:center;color:var(--text)}
+  .orn{display:flex;align-items:center;justify-content:center;gap:10px;color:var(--accent);margin:10px 0 20px}
+  .orn span{width:48px;height:1px;background:currentColor;opacity:.6}
+  .orn svg{width:11px;height:11px;display:block}
 
-  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-  .card{background:var(--card);border-radius:10px;overflow:hidden;box-shadow:0 0 0 1px var(--card-border)}
-  .card img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;background:var(--img-bg)}
-  .card .body{padding:12px 12px 16px}
-  .card .row{flex-direction:column;align-items:flex-start;gap:8px}
-  .row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
-  .name{font-size:20px;line-height:1.2;font-weight:800;text-transform:uppercase;letter-spacing:.4px}
-  .card .name{font-size:16px;letter-spacing:.2px;overflow-wrap:anywhere}
-  .pill{background:var(--accent);color:var(--on-accent);font-weight:800;font-size:16px;padding:5px 12px;border-radius:999px;white-space:nowrap}
-  .desc{color:var(--muted);font-size:16px;margin-top:8px}
-  .card .desc{font-size:14px;line-height:1.4;margin-top:8px}
-  .allerg{color:var(--faint);font-size:14px;margin-top:8px}
-  .card .prices{align-self:stretch}
-  .pr{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:6px}
-  .pr:first-child{margin-top:0}
-  .plabel{color:var(--muted);font-size:13px;font-weight:600}
-  .pill.alt{background:transparent;color:var(--accent);box-shadow:inset 0 0 0 2px var(--accent)}
-  .pnote{display:block;color:var(--faint);font-size:12.5px;margin-top:8px}
-  .rprices div{display:flex;justify-content:flex-end;align-items:baseline;gap:10px}
-  .rprices small{color:var(--muted);font-size:13px;font-weight:600}
-  .card .allerg{font-size:12.5px}
-  @media (min-width:760px){
-    .grid{grid-template-columns:repeat(3,1fr);gap:18px}
-    .card .body{padding:16px 18px 20px}
-    .card .name{font-size:19px}
-    .card .desc{font-size:16px}
-    .card .allerg{font-size:14px}
-  }
+  .dishes{display:grid;grid-template-columns:1fr;gap:12px}
+  @media (min-width:760px){.dishes{grid-template-columns:1fr 1fr;gap:14px}}
+  .dish{display:flex;gap:14px;background:var(--card);border:1px solid var(--card-line);border-radius:14px;padding:14px}
+  .thumb{flex:none;width:72px;height:72px;border-radius:50%;background:#f3e8d0;overflow:hidden}
+  .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+  .dbody{flex:1;min-width:0}
+  .dtop{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+  .dtop h3{font:700 18px/1.25 var(--serif);color:var(--text)}
+  .price{font:700 18px/1.25 var(--serif);color:var(--accent);white-space:nowrap}
+  .ddesc{color:var(--muted);font-size:15px;line-height:1.4;margin-top:4px}
+  .lunch{margin-top:8px;font-size:14px;color:var(--text)}
+  .lunch b{color:var(--accent);font-family:var(--serif);font-size:16px}
+  .lunch small{color:var(--faint);font-size:13px}
+  .dal{color:var(--faint);font-size:13px;margin-top:6px}
+  .off{opacity:.55}
+  .tag-off{display:inline-block;margin-left:8px;font:600 12px/1 system-ui,sans-serif;color:var(--card);background:var(--muted);border-radius:6px;padding:3px 7px;vertical-align:middle}
 
-  .list .item{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;padding:16px 0;border-bottom:1px solid var(--line)}
-  .list .item:first-child{border-top:1px solid var(--line)}
-  .list .price{color:var(--accent);font-weight:800;font-size:20px;white-space:nowrap}
-
-  .soldout{opacity:.45}
-  .tag{display:inline-block;margin-left:8px;font-size:13px;font-weight:700;color:var(--tag-fg);background:var(--tag-bg);border-radius:6px;padding:1px 7px;text-transform:none;letter-spacing:0;vertical-align:middle}
-
-  .card .tag{display:table;margin:6px 0 0}
-  .msg{padding:90px 0;text-align:center;color:var(--muted)}
-  .msg h2{color:var(--text);margin-bottom:8px;font-size:22px}
-  footer.wrap{padding-bottom:56px}
-  .logo{display:block;width:auto;height:auto;max-height:104px;max-width:60%}
-  .logo-top{margin:14px auto 0}
-  .lang{display:flex;align-items:center;justify-content:center;gap:8px;padding-top:12px}
-  .lang-label{color:var(--muted);font-size:13px;font-weight:600;margin-right:2px}
-  .lang button{width:42px;height:30px;padding:0;border-radius:6px;border:2px solid var(--chip-border);background:var(--card);cursor:pointer;display:flex;align-items:center;justify-content:center}
-  .lang button svg{width:26px;height:17px;display:block;border-radius:2px}
-  .lang button[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
-  .lang button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-  .logo-bottom{margin:40px auto 0;max-height:88px}
+  .msg{padding:70px 0;text-align:center;color:var(--muted)}
+  .msg h2{font:400 24px/1.2 var(--serif);color:var(--text);margin-bottom:8px}
+  footer.end{padding:44px 18px 48px;text-align:center}
+  footer.end .logo{margin:0 auto;max-height:80px}
 </style>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
 </head>
 <body>
-<div class="wrap">
-  <div class="lang" role="group" aria-label="Lingua / Language">
-    <span class="lang-label" id="langLabel">Lingua</span>
-    <button type="button" data-lang="it" aria-label="Italiano" aria-pressed="true"><svg viewBox="0 0 3 2" preserveAspectRatio="none" aria-hidden="true"><rect width="1" height="2" fill="#009246"/><rect x="1" width="1" height="2" fill="#ffffff"/><rect x="2" width="1" height="2" fill="#ce2b37"/></svg></button>
-    <button type="button" data-lang="en" aria-label="English" aria-pressed="false"><svg viewBox="0 0 60 30" preserveAspectRatio="none" aria-hidden="true"><clipPath id="uj-s"><path d="M0,0 v30 h60 v-30 z"/></clipPath><clipPath id="uj-t"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath><g clip-path="url(#uj-s)"><path d="M0,0 v30 h60 v-30 z" fill="#012169"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#ffffff" stroke-width="6"/><path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#uj-t)" stroke="#C8102E" stroke-width="4"/><path d="M30,0 v30 M0,15 h60" stroke="#ffffff" stroke-width="10"/><path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/></g></svg></button>
-  </div>
-  <img class="logo logo-top" alt="CcMenù">
-  <header class="top" id="head" hidden>
-    <div class="brand">
-      <h1 id="rname"></h1><p class="tagline" id="rtag"></p>
+<header class="hero">
+  <div class="wrap">
+    <div class="lang" role="group" aria-label="Lingua / Language">
+      <span class="lang-label" id="langLabel">Lingua</span>
+      <button type="button" data-lang="it" aria-label="Italiano" aria-pressed="true"><svg viewBox="0 0 3 2" preserveAspectRatio="none" aria-hidden="true"><rect width="1" height="2" fill="#009246"/><rect x="1" width="1" height="2" fill="#ffffff"/><rect x="2" width="1" height="2" fill="#ce2b37"/></svg></button>
+      <button type="button" data-lang="en" aria-label="English" aria-pressed="false"><svg viewBox="0 0 60 30" preserveAspectRatio="none" aria-hidden="true"><clipPath id="uj-s"><path d="M0,0 v30 h60 v-30 z"/></clipPath><clipPath id="uj-t"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath><g clip-path="url(#uj-s)"><path d="M0,0 v30 h60 v-30 z" fill="#012169"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#ffffff" stroke-width="6"/><path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#uj-t)" stroke="#C8102E" stroke-width="4"/><path d="M30,0 v30 M0,15 h60" stroke="#ffffff" stroke-width="10"/><path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/></g></svg></button>
     </div>
-  </header>
-</div>
+    <img class="logo" alt="CcMenù" src="logo-tema-scuro.png">
+    <div class="titleblock" id="titleBlock" hidden>
+      <h1 id="rname"></h1>
+      <div class="kicker" id="kickerRow" hidden><span></span><b id="kicker"></b><span></span></div>
+      <p class="tag" id="rtag"></p>
+    </div>
+  </div>
+</header>
+
 <nav class="chips" id="chips" hidden><div class="scroll" id="chipList"></div></nav>
-<main class="wrap" id="app"><p class="msg">Caricamento del menu…</p></main>
-<footer class="wrap" id="foot"><img class="logo logo-bottom" alt="CcMenù"></footer>
+
+<main class="sheet">
+  <div class="wrap" id="app"><p class="msg">Caricamento del menu…</p></div>
+  <footer class="end"><img class="logo" alt="CcMenù" src="logo-tema-chiaro.png"></footer>
+</main>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script src="config.js"></script>
@@ -109,18 +100,10 @@
 const db = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY);
 const app = document.getElementById('app');
 
-const LOGOS = { dark: 'logo-tema-scuro.png', light: 'logo-tema-chiaro.png' };
-function applyTheme(t){
-  t = t === 'light' ? 'light' : 'dark';
-  document.documentElement.dataset.theme = t;
-  document.querySelectorAll('img.logo').forEach(i => { i.src = LOGOS[t]; });
-  const m = document.querySelector('meta[name="theme-color"]');
-  if(m) m.content = t === 'light' ? '#faf8f3' : '#000000';
-  return t;
-}
-
 const h = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-// ---------- Lingua ----------
+const bySort = (a, b) => a.sort_order - b.sort_order;
+
+/* ---------- Lingua ---------- */
 const I18N = {
   it: { lang:'Lingua', loading:'Caricamento del menu…', soldout:'Esaurito', allergens:'Allergeni',
         bad_t:'Link non valido', bad_d:'Apri il menu dal link della tessera o dal QR code.',
@@ -138,13 +121,12 @@ const t = k => I18N[lang][k];
 // testo in inglese se c'e', altrimenti quello italiano
 const tr = (o, f) => (lang === 'en' && o[f + '_en']) ? o[f + '_en'] : o[f];
 const priceLabels = () => lang === 'en'
-  ? { single: CONFIG.LABEL_SINGLE_EN || 'Single', menu: CONFIG.LABEL_MENU_EN || 'Meal', note: CONFIG.MENU_NOTE_EN || '' }
-  : { single: CONFIG.LABEL_SINGLE || 'Solo piatto', menu: CONFIG.LABEL_MENU || 'Menu', note: CONFIG.MENU_NOTE || '' };
+  ? { menu: CONFIG.LABEL_MENU_EN || 'Menu', note: CONFIG.MENU_NOTE_EN || '' }
+  : { menu: CONFIG.LABEL_MENU || 'Menu', note: CONFIG.MENU_NOTE || '' };
 const eur = n => {
-  const v = Number(n).toLocaleString(lang === 'en' ? 'en-GB' : 'it-IT', {minimumFractionDigits:2, maximumFractionDigits:2});
-  return lang === 'en' ? '€' + v : v + ' €';
+  const v = Number(n).toLocaleString(lang === 'en' ? 'en-GB' : 'it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  return lang === 'en' ? '\u20AC' + v : v + ' \u20AC';
 };
-const bySort = (a, b) => a.sort_order - b.sort_order;
 
 const msgHtml = key => `<div class="msg"><h2>${h(t(key + '_t'))}</h2><p>${h(t(key + '_d'))}</p></div>`;
 function message(key){ view = 'msg'; msgKey = key; app.innerHTML = msgHtml(key); }
@@ -170,86 +152,41 @@ document.querySelector('.lang').addEventListener('click', e => {
   if(b) setLang(b.dataset.lang, true);
 });
 
-const hasMenu = it => it.menu_price !== null && it.menu_price !== undefined;
-
-function priceBlock(it){
-  if(!hasMenu(it)) return `<span class="pill">${eur(it.price)}</span>`;
-  const L = priceLabels();
-  return `<div class="prices">
-    <div class="pr"><span class="plabel">${h(L.single)}</span><span class="pill">${eur(it.price)}</span></div>
-    <div class="pr"><span class="plabel">${h(L.menu)}</span><span class="pill alt">${eur(it.menu_price)}</span></div>
-    ${L.note ? `<span class="pnote">${h(L.note)}</span>` : ''}
-  </div>`;
-}
-
-function rowPrice(it){
-  if(!hasMenu(it)) return `<span class="price">${eur(it.price)}</span>`;
-  const L = priceLabels();
-  return `<div class="rprices">
-    <div><small>${h(L.single)}</small><span class="price">${eur(it.price)}</span></div>
-    <div><small>${h(L.menu)}</small><span class="price">${eur(it.menu_price)}</span></div>
-  </div>`;
-}
-
-function itemCard(it){
-  const name = tr(it, 'name'), desc = tr(it, 'description'), al = tr(it, 'allergens');
-  const img = it.image_url && /^https:\/\//.test(it.image_url)
-    ? `<img src="${h(it.image_url)}" alt="${h(name)}" loading="lazy">` : '';
-  return `<article class="card${it.available ? '' : ' soldout'}">
-    ${img}
-    <div class="body">
-      <div class="row"><h3 class="name">${h(name)}${it.available ? '' : `<span class="tag">${h(t('soldout'))}</span>`}</h3>
-        ${priceBlock(it)}</div>
-      ${desc ? `<p class="desc">${h(desc)}</p>` : ''}
-      ${al ? `<p class="allerg">${h(t('allergens'))}: ${h(al)}</p>` : ''}
-    </div></article>`;
-}
-
-function itemRow(it){
-  const name = tr(it, 'name'), desc = tr(it, 'description'), al = tr(it, 'allergens');
-  return `<div class="item${it.available ? '' : ' soldout'}">
-    <div><h3 class="name">${h(name)}${it.available ? '' : `<span class="tag">${h(t('soldout'))}</span>`}</h3>
-      ${desc ? `<p class="desc">${h(desc)}</p>` : ''}
-      ${al ? `<p class="allerg">${h(t('allergens'))}: ${h(al)}</p>` : ''}</div>
-    ${rowPrice(it)}</div>`;
-}
-
-// Prima parola del nome su una riga, il resto sotto
+/* ---------- Titolo: prima parola in grande, il resto sotto ---------- */
 function setTitle(name){
-  const el = document.getElementById('rname');
   const i = name.indexOf(' ');
-  el.textContent = '';
-  const a = document.createElement('span');
-  a.className = 't1';
-  a.textContent = i === -1 ? name : name.slice(0, i);
-  el.appendChild(a);
-  if(i !== -1 && name.slice(i + 1).trim()){
-    el.appendChild(document.createTextNode(' '));
-    const b = document.createElement('span');
-    b.className = 't2';
-    b.textContent = name.slice(i + 1).trim();
-    el.appendChild(b);
-  }
+  const first = i === -1 ? name : name.slice(0, i);
+  const rest = i === -1 ? '' : name.slice(i + 1).trim();
+  document.getElementById('rname').textContent = first;
+  document.getElementById('kicker').textContent = rest;
+  document.getElementById('kickerRow').hidden = !rest;
 }
-
-// Rimpicciolisce il titolo finche' ogni riga sta nello schermo
 function fitTitle(){
   const el = document.getElementById('rname');
   if(!el || !el.offsetParent) return;
-  const avail = el.clientWidth;
-  let size = 48;
+  let size = 76;
   el.style.fontSize = size + 'px';
-  while(size > 14 && el.scrollWidth > avail){ size -= 1; el.style.fontSize = size + 'px'; }
+  while(size > 28 && el.scrollWidth > el.clientWidth){ size -= 2; el.style.fontSize = size + 'px'; }
 }
-let titleWatched = false;
-function watchTitle(){
-  if(titleWatched) return;
-  titleWatched = true;
-  window.addEventListener('resize', fitTitle);
-  if(document.fonts){
-    document.fonts.addEventListener('loadingdone', fitTitle);
-    document.fonts.load("48px 'Patrick Hand'").then(fitTitle).catch(() => {});
-  }
+window.addEventListener('resize', fitTitle);
+
+/* ---------- Piatti ---------- */
+const ORN = '<div class="orn"><span></span><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M6 0l1.6 4.4L12 6 7.6 7.6 6 12 4.4 7.6 0 6l4.4-1.6z" fill="currentColor"/></svg><span></span></div>';
+
+function dish(it){
+  const name = tr(it, 'name'), desc = tr(it, 'description'), al = tr(it, 'allergens');
+  const hasMenu = it.menu_price !== null && it.menu_price !== undefined;
+  const L = priceLabels();
+  const photo = it.image_url && /^https:\/\//.test(it.image_url)
+    ? `<div class="thumb"><img src="${h(it.image_url)}" alt="${h(name)}" loading="lazy"></div>` : '';
+  return `<article class="dish${it.available ? '' : ' off'}">
+    ${photo}
+    <div class="dbody">
+      <div class="dtop"><h3>${h(name)}${it.available ? '' : `<span class="tag-off">${h(t('soldout'))}</span>`}</h3><span class="price">${eur(it.price)}</span></div>
+      ${desc ? `<p class="ddesc">${h(desc)}</p>` : ''}
+      ${hasMenu ? `<p class="lunch">${h(L.menu)} <b>${eur(it.menu_price)}</b>${L.note ? ` <small>· ${h(L.note)}</small>` : ''}</p>` : ''}
+      ${al ? `<p class="dal">${h(t('allergens'))}: ${h(al)}</p>` : ''}
+    </div></article>`;
 }
 
 function render(r){
@@ -257,6 +194,8 @@ function render(r){
   document.title = r.name;
   setTitle(r.name);
   document.getElementById('rtag').textContent = tr(r, 'tagline') || '';
+  document.getElementById('titleBlock').hidden = false;
+  fitTitle();
   const cats = (r.categories || []).slice().sort(bySort)
     .map(c => ({...c, items: (c.items || []).slice().sort(bySort)}))
     .filter(c => c.items.length);
@@ -264,46 +203,52 @@ function render(r){
   if(!cats.length){
     app.innerHTML = msgHtml('upd');
     document.getElementById('chips').hidden = true;
-  } else {
-    app.innerHTML = cats.map(c => `<section class="cat" id="cat-${h(c.id)}">
-      <h2>${h(tr(c, 'name'))}</h2>
-      ${c.layout === 'cards'
-        ? `<div class="grid">${c.items.map(itemCard).join('')}</div>`
-        : `<div class="list">${c.items.map(itemRow).join('')}</div>`}
-    </section>`).join('');
-    document.getElementById('chipList').innerHTML =
-      cats.map(c => `<a class="chip" href="#cat-${h(c.id)}">${h(tr(c, 'name'))}</a>`).join('');
-    document.getElementById('chips').hidden = cats.length < 2;
+    return;
   }
-  document.getElementById('head').hidden = false;
-  fitTitle();
-  watchTitle();
+  app.innerHTML = cats.map(c => `<section class="cat" id="cat-${h(c.id)}" data-id="${h(c.id)}">
+      <h2>${h(tr(c, 'name'))}</h2>${ORN}
+      <div class="dishes">${c.items.map(dish).join('')}</div></section>`).join('');
+  document.getElementById('chipList').innerHTML =
+    cats.map(c => `<a class="chip" href="#cat-${h(c.id)}" data-id="${h(c.id)}">${h(tr(c, 'name'))}</a>`).join('');
+  document.getElementById('chips').hidden = false;
+  watchSections();
 }
 
+/* categoria evidenziata mentre si scorre */
+let io = null;
+function watchSections(){
+  if(io) io.disconnect();
+  if(!('IntersectionObserver' in window)) return;
+  io = new IntersectionObserver(entries => {
+    entries.forEach(en => {
+      if(!en.isIntersecting) return;
+      document.querySelectorAll('.chip').forEach(c => c.classList.toggle('on', c.dataset.id === en.target.dataset.id));
+      const on = document.querySelector('.chip.on');
+      if(on) on.scrollIntoView({ block: 'nearest', inline: 'center' });
+    });
+  }, { rootMargin: '-35% 0px -60% 0px' });
+  document.querySelectorAll('section.cat').forEach(s => io.observe(s));
+}
+
+/* ---------- Caricamento dal database ---------- */
 (async function load(){
   setLang(initialLang(), false);   // mostra "Caricamento..." nella lingua giusta
   const slug = new URLSearchParams(location.search).get('r');
-  // tema salvato l'ultima volta: evita il lampo scuro/chiaro all'apertura
-  let saved = null;
-  try{ saved = localStorage.getItem('theme:' + slug); }catch{}
-  applyTheme(saved);
   if(!slug){ message('bad'); return; }
 
-  const sel = (th, en) => 'id,name,tagline,' + (en ? 'tagline_en,' : '') + (th ? 'theme,' : '') +
-    'categories(id,name,' + (en ? 'name_en,' : '') + 'layout,sort_order,items(id,name,' +
+  const sel = en => 'id,name,tagline,' + (en ? 'tagline_en,' : '') +
+    'categories(id,name,' + (en ? 'name_en,' : '') + 'sort_order,items(id,name,' +
     (en ? 'name_en,description_en,allergens_en,' : '') +
     'description,price,menu_price,allergens,image_url,available,sort_order))';
-  // se una colonna nuova non esiste ancora, riprova senza: il menu si vede comunque
+  // se le colonne in inglese non esistono ancora, riprova senza: il menu si vede comunque
   let res;
-  for(const [th, en] of [[true, true], [true, false], [false, true], [false, false]]){
-    res = await db.from('restaurants').select(sel(th, en)).eq('slug', slug).maybeSingle();
+  for(const en of [true, false]){
+    res = await db.from('restaurants').select(sel(en)).eq('slug', slug).maybeSingle();
     if(!res.error || !/column|does not exist|schema cache/i.test(res.error.message || '')) break;
   }
   const { data, error } = res;
   if(error){ message('err'); return; }
   if(!data){ message('nf'); return; }
-  const th = applyTheme(data.theme);
-  try{ localStorage.setItem('theme:' + slug, th); }catch{}
   render(data);
 })();
 </script>
