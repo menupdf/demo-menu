@@ -8,8 +8,8 @@
 // La chiave "publishable" e' pubblica per progetto: puo' stare nella pagina.
 // NON inserire qui MAI la chiave "secret" / "service_role".
 window.CONFIG = {
-  SUPABASE_URL: "INCOLLA-QUI-IL-PROJECT-URL",
-  SUPABASE_KEY: "INCOLLA-QUI-LA-CHIAVE-PUBLISHABLE",
+  SUPABASE_URL: "https://mcjbncziybitirhsxqps.supabase.co/rest/v1/",
+  SUPABASE_KEY: "sb_publishable_PmtaM2_eS9Q3_KguPPx-zw_W1pZwTiN",
   BUCKET: "menu-images",
   // Riga del secondo prezzo (quando un piatto ha il "prezzo menu"):
   // es.  Menu pranzo 14,00 € · con acqua e caffè
