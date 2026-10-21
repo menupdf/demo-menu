@@ -89,6 +89,11 @@
   .band .logo{display:block;margin:0 auto;width:auto;height:auto;max-height:84px;max-width:60%}
   .band h1{font:italic 400 32px/1.1 Georgia,'Noto Serif','Times New Roman',serif;text-transform:none;letter-spacing:0;margin-top:10px}
   .page{background:var(--bg);border-radius:26px 26px 0 0;min-height:78vh}
+  .img-field{margin-top:14px}
+  .img-field .lbl{color:var(--muted);font-size:14px}
+  .img-prev{margin-top:6px;width:100%;aspect-ratio:2/1;background:var(--input-bg);border:1px dashed var(--btn-border);border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:13px}
+  .img-prev.sq{width:96px;aspect-ratio:1/1}
+  .img-prev img{width:100%;height:100%;object-fit:cover;display:block}
 </style>
 </head>
 <body>
@@ -244,7 +249,23 @@ function renderEditor(){
       <select id="restSel">${state.restaurants.map(x => `<option value="${x.id}"${x.id === r.id ? ' selected' : ''}>${h(x.name)}</option>`).join('')}</select></label>` : ''}
     <section class="panel">
       <h2>Dati del locale</h2>
-      <label class="field">Nome (la prima parola appare in grande, le altre sotto)<input data-rest="name" value="${h(r.name)}" maxlength="80"></label>
+      <div class="img-field">
+        <span class="lbl">Foto del locale (copertina in alto)</span>
+        <div class="img-prev">${r.cover_url ? `<img src="${h(r.cover_url)}" alt="">` : 'Nessuna foto'}</div>
+        <div class="actions">
+          <label class="btn sm">${r.cover_url ? 'Cambia foto' : 'Carica foto'}<input type="file" accept="image/*" data-restimg="cover" hidden></label>
+          ${r.cover_url ? '<button class="btn sm danger" data-act="restimg-del" data-kind="cover">Rimuovi foto</button>' : ''}
+        </div>
+      </div>
+      <div class="img-field">
+        <span class="lbl">Logo del locale (quadrato)</span>
+        <div class="img-prev sq">${r.logo_url ? `<img src="${h(r.logo_url)}" alt="">` : 'Nessun logo'}</div>
+        <div class="actions">
+          <label class="btn sm">${r.logo_url ? 'Cambia logo' : 'Carica logo'}<input type="file" accept="image/*" data-restimg="logo" hidden></label>
+          ${r.logo_url ? '<button class="btn sm danger" data-act="restimg-del" data-kind="logo">Rimuovi logo</button>' : ''}
+        </div>
+      </div>
+      <label class="field">Nome<input data-rest="name" value="${h(r.name)}" maxlength="80"></label>
       <label class="field">Sottotitolo<input data-rest="tagline" value="${h(r.tagline)}" maxlength="120"></label>
       <label class="field">Sottotitolo in inglese<input data-rest="tagline_en" value="${h(r.tagline_en)}" maxlength="120"></label>
       <label class="field">Link del menu (da scrivere sulla tessera NFC)<input id="menuLink" readonly value="${h(link)}"></label>
@@ -278,7 +299,7 @@ async function removeFiles(urls){
   if(paths.length) await db.storage.from(BUCKET).remove(paths);
 }
 
-function resizeImage(file, maxW = 1200){
+function resizeImage(file, maxW = 1200, type = 'image/jpeg', quality = 0.85){
   return new Promise((resolve, reject) => {
     const img = new Image();
     const url = URL.createObjectURL(file);
@@ -289,7 +310,7 @@ function resizeImage(file, maxW = 1200){
       cv.height = Math.round(img.height * s);
       cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height);
       URL.revokeObjectURL(url);
-      cv.toBlob(b => b ? resolve(b) : reject(new Error('immagine non valida')), 'image/jpeg', 0.85);
+      cv.toBlob(b => b ? resolve(b) : reject(new Error('immagine non valida')), type, quality);
     };
     img.onerror = () => reject(new Error('immagine non valida'));
     img.src = url;
@@ -365,6 +386,29 @@ async function uploadPhoto(input){
     renderEditor();
   }catch(err){
     toast('Foto non caricata: ' + (err.message || err), true);
+  }
+  input.value = '';
+}
+
+/* foto di copertina e logo del locale */
+async function uploadRestImage(input){
+  const kind = input.dataset.restimg, file = input.files[0];
+  if(!file) return;
+  const col = kind === 'cover' ? 'cover_url' : 'logo_url';
+  toast('Carico l\'immagine…');
+  try{
+    const blob = kind === 'cover' ? await resizeImage(file, 1600, 'image/jpeg', 0.85) : await resizeImage(file, 480, 'image/png');
+    const path = state.rest.id + '/' + kind + '-' + crypto.randomUUID() + (kind === 'cover' ? '.jpg' : '.png');
+    const up = await db.storage.from(BUCKET).upload(path, blob, { contentType: blob.type, cacheControl: '31536000' });
+    if(up.error) throw up.error;
+    const url = db.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
+    const old = state.rest[col];
+    if(!(await save('restaurants', state.rest.id, { [col]: url }))){ await removeFiles([url]); return; }
+    state.rest[col] = url;
+    if(old) removeFiles([old]);
+    renderEditor();
+  }catch(err){
+    toast('Immagine non caricata: ' + (err.message || err), true);
   }
   input.value = '';
 }
@@ -445,6 +489,13 @@ async function act(name, btn){
     return;
   }
 
+  if(name === 'restimg-del'){
+    const col = btn.dataset.kind === 'cover' ? 'cover_url' : 'logo_url';
+    const old = state.rest[col];
+    if(await save('restaurants', state.rest.id, { [col]: null })){ state.rest[col] = null; removeFiles([old]); renderEditor(); }
+    return;
+  }
+
   if(name === 'photo-del'){
     const { it } = findItem(itemEl.dataset.item);
     const old = it.image_url;
@@ -474,6 +525,7 @@ app.addEventListener('change', e => {
   if(t.id === 'restSel') return selectRestaurant(t.value);
   if(t.dataset.rest) return saveRest(t);
   if(t.dataset.cfield) return saveCat(t);
+  if(t.dataset.restimg) return uploadRestImage(t);
   if(t.dataset.photo !== undefined) return uploadPhoto(t);
   if(t.dataset.field) return saveItem(t);
 });

@@ -25,13 +25,19 @@
   .lang button svg{width:26px;height:17px;display:block;border-radius:2px}
   .lang button[aria-pressed="true"]{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold)}
   .lang button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
-  .logo{display:block;width:auto;height:auto;max-height:92px;max-width:60%;margin:14px auto 0}
-  .titleblock{margin-top:18px}
-  h1{font:italic 400 76px/1.05 var(--serif);white-space:nowrap;color:var(--ink-on-black)}
-  .kicker{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:8px;color:var(--gold);font-size:13px;letter-spacing:.26em;text-transform:uppercase}
-  .kicker span{width:24px;height:1px;background:var(--gold);opacity:.7;flex:none}
-  .kicker b{font-weight:400;text-align:center;min-width:0}
-  .tag{color:var(--muted-on-black);font-size:15px;letter-spacing:.04em;margin-top:10px}
+  .logo{display:block;width:auto;height:auto;max-height:68px;max-width:55%;margin:12px auto 0}
+  .cover{max-width:960px;margin:16px auto 0}
+  .cover-img{aspect-ratio:2/1;overflow:hidden;background:#161616}
+  .cover-img img{width:100%;height:100%;object-fit:cover;display:block}
+  @media (min-width:960px){.cover-img{border-radius:16px}}
+  .cover-head{display:flex;align-items:flex-start;gap:14px;padding:0 18px;margin-top:14px}
+  .cover-head.over{margin-top:-38px}
+  .rlogo{flex:none;width:78px;height:78px;border-radius:16px;background:#141210;border:2px solid var(--black-line);overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.5)}
+  .rlogo img{width:100%;height:100%;object-fit:cover;display:block}
+  .rtitle{min-width:0;text-align:left}
+  .cover-head.over .rtitle{margin-top:42px}
+  h1{font:700 26px/1.15 var(--serif);color:var(--ink-on-black);overflow-wrap:anywhere}
+  .tag{color:var(--muted-on-black);font-size:14px;letter-spacing:.03em;margin-top:4px}
 
   nav.chips{position:sticky;top:0;z-index:5;background:var(--black);border-bottom:1px solid var(--black-line)}
   nav.chips .scroll{display:flex;gap:10px;overflow-x:auto;padding:12px 18px;max-width:960px;margin:0 auto;scrollbar-width:none}
@@ -79,10 +85,12 @@
       <button type="button" data-lang="en" aria-label="English" aria-pressed="false"><svg viewBox="0 0 60 30" preserveAspectRatio="none" aria-hidden="true"><clipPath id="uj-s"><path d="M0,0 v30 h60 v-30 z"/></clipPath><clipPath id="uj-t"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath><g clip-path="url(#uj-s)"><path d="M0,0 v30 h60 v-30 z" fill="#012169"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#ffffff" stroke-width="6"/><path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#uj-t)" stroke="#C8102E" stroke-width="4"/><path d="M30,0 v30 M0,15 h60" stroke="#ffffff" stroke-width="10"/><path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/></g></svg></button>
     </div>
     <img class="logo" alt="CcMenù" src="logo-tema-scuro.png">
-    <div class="titleblock" id="titleBlock" hidden>
-      <h1 id="rname"></h1>
-      <div class="kicker" id="kickerRow" hidden><span></span><b id="kicker"></b><span></span></div>
-      <p class="tag" id="rtag"></p>
+  </div>
+  <div class="cover" id="cover" hidden>
+    <div class="cover-img" id="coverImg" hidden><img id="coverPic" alt=""></div>
+    <div class="cover-head" id="coverHead">
+      <div class="rlogo" id="rlogo" hidden><img id="rlogoPic" alt=""></div>
+      <div class="rtitle"><h1 id="rname"></h1><p class="tag" id="rtag"></p></div>
     </div>
   </div>
 </header>
@@ -152,23 +160,18 @@ document.querySelector('.lang').addEventListener('click', e => {
   if(b) setLang(b.dataset.lang, true);
 });
 
-/* ---------- Titolo: prima parola in grande, il resto sotto ---------- */
-function setTitle(name){
-  const i = name.indexOf(' ');
-  const first = i === -1 ? name : name.slice(0, i);
-  const rest = i === -1 ? '' : name.slice(i + 1).trim();
-  document.getElementById('rname').textContent = first;
-  document.getElementById('kicker').textContent = rest;
-  document.getElementById('kickerRow').hidden = !rest;
+/* ---------- Testata: foto del locale, logo quadrato e nome ---------- */
+function setCover(r){
+  const ok = u => !!(u && /^https:\/\//.test(u));
+  const hasImg = ok(r.cover_url), hasLogo = ok(r.logo_url);
+  document.getElementById('coverImg').hidden = !hasImg;
+  if(hasImg) document.getElementById('coverPic').src = r.cover_url;
+  document.getElementById('rlogo').hidden = !hasLogo;
+  if(hasLogo) document.getElementById('rlogoPic').src = r.logo_url;
+  document.getElementById('coverHead').classList.toggle('over', hasImg && hasLogo);
+  document.getElementById('rname').textContent = r.name;
+  document.getElementById('cover').hidden = false;
 }
-function fitTitle(){
-  const el = document.getElementById('rname');
-  if(!el || !el.offsetParent) return;
-  let size = 76;
-  el.style.fontSize = size + 'px';
-  while(size > 28 && el.scrollWidth > el.clientWidth){ size -= 2; el.style.fontSize = size + 'px'; }
-}
-window.addEventListener('resize', fitTitle);
 
 /* ---------- Piatti ---------- */
 const ORN = '<div class="orn"><span></span><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M6 0l1.6 4.4L12 6 7.6 7.6 6 12 4.4 7.6 0 6l4.4-1.6z" fill="currentColor"/></svg><span></span></div>';
@@ -192,10 +195,8 @@ function dish(it){
 function render(r){
   current = r; view = 'menu';
   document.title = r.name;
-  setTitle(r.name);
+  setCover(r);
   document.getElementById('rtag').textContent = tr(r, 'tagline') || '';
-  document.getElementById('titleBlock').hidden = false;
-  fitTitle();
   const cats = (r.categories || []).slice().sort(bySort)
     .map(c => ({...c, items: (c.items || []).slice().sort(bySort)}))
     .filter(c => c.items.length);
@@ -236,14 +237,14 @@ function watchSections(){
   const slug = new URLSearchParams(location.search).get('r');
   if(!slug){ message('bad'); return; }
 
-  const sel = en => 'id,name,tagline,' + (en ? 'tagline_en,' : '') +
+  const sel = (en, cv) => 'id,name,tagline,' + (cv ? 'cover_url,logo_url,' : '') + (en ? 'tagline_en,' : '') +
     'categories(id,name,' + (en ? 'name_en,' : '') + 'sort_order,items(id,name,' +
     (en ? 'name_en,description_en,allergens_en,' : '') +
     'description,price,menu_price,allergens,image_url,available,sort_order))';
-  // se le colonne in inglese non esistono ancora, riprova senza: il menu si vede comunque
+  // se alcune colonne non esistono ancora (inglese, foto), riprova senza: il menu si vede comunque
   let res;
-  for(const en of [true, false]){
-    res = await db.from('restaurants').select(sel(en)).eq('slug', slug).maybeSingle();
+  for(const [en, cv] of [[true, true], [true, false], [false, true], [false, false]]){
+    res = await db.from('restaurants').select(sel(en, cv)).eq('slug', slug).maybeSingle();
     if(!res.error || !/column|does not exist|schema cache/i.test(res.error.message || '')) break;
   }
   const { data, error } = res;
